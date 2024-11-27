@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Monitoring Network </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Green Monitoring Network</h1>
+    </header>
+    <section id="TyF">
+    <p id="aboveVOC">Green Monitor Project aims to measure the gass emissions that are emitted by illegal factories and the temperature of the environment.<br>
+        These gasses are represented in: 
+        <br>
+        1. VOC (Volatile Organic Compounds) Such as (Benzene, Toluene, Formaldehyde and Alcohol).
+        <br>
+        2. CO2 .
+        <br>
+        3. Temperature.
+        <br>
+        
+        This project given for the government to detect the illegal factories & Decide either to demolish the factory or suggest filtration systems:</p>
+        <section id="boxim">
+        <img id = "img" src="prototype .jpeg">
+            </section>
+        </section>
+        <h2>Recent Data</h2>  
+        <div class="container">
+            <p class="loading" id="loading">Loading...</p>
+            <div id="dataBox" class="data-box">
+              <h3 id="Rvoc">VOC : <span id="field1"></span></h3>
+              <h3 id="Rco">CO<sub>2</sub>: <span id="field2"></span></h3>
+              <h3 id="RT">Temperature : <span id="field3"></span></h3>
+            </div>
+        </div>
+
+    <!-- Overview Section -->
+    <main>
+        <div class="graphs-overview">
+            <!-- VOC Graph -->
+            <a href="#voc-dedicated"><section id="voc-section">
+                <h2>VOC Levels</h2>
+                <canvas id="voc-chart"></canvas></a>
+                <figcaption>Concentration of VOCin ppm </figcaption>
+               
+            </section>
+        
+            <!-- CO2 Graph -->
+            <a href="#co2-dedicated"><section id="co2-section">
+                <h2>CO<sub>2</sub>Levels</h2>
+                <canvas id="co2-chart"></canvas></a>
+                <figcaption>Concentration of CO<sub>2</sub> in ppm </figcaption>
+                
+            </section>
+            <!-- Temperature Graph -->
+            <a href="#temperature-dedicated"><section id="temperature-section">
+                <h2>Temperature</h2>
+                <canvas id="temperature-chart"></canvas></a>
+                <figcaption>Concentration of Temperature ppm </figcaption>
+            </section>
+            
+        </div>
+        
+
+        <!-- Dedicated Sections -->
+        <div class="dedicated-section" id="voc-dedicated">
+            <h2>Detailed VOC Graph</h2>
+            <canvas id="voc-detailed-chart"></canvas>
+        </div>
+
+        <div class="dedicated-section" id="co2-dedicated">
+            <h2>Detailed CO<sub>2</sub> Graph</h2>
+            <canvas id="co2-detailed-chart"></canvas>
+        </div>
+
+        <div class="dedicated-section" id="temperature-dedicated">
+            <h2>Detailed Temperature Graph</h2>
+            <canvas id="temperature-detailed-chart"></canvas>
+        </div>
+        <section id="TecR">
+            <h2 id="Tec">
+                Technical Reprot
+                <p id="TP"> <h3>Mechanism:</h3>  <br>
+                    1.	VOC (MS1100) Sensor: This sensor is from PID’s (Photoionization detectors). Which receives the ionization energy that is required to ionize the gas molecules. This sensor is made from Metal oxide semiconductor (MOS) surface. MS1100 is typically made from SnO2. When VOC gases come to contact with the oxygen adsorbed on the surface of the sensor it increases sensor conductivity which is proportional to voc concentration. Sensor is more sensitive at feverish temperatures as the resistance increases significantly. This sensor required a preheat of 5 minutes to ensure the precision of the measurements. <br>
+                    2.	MQ-135: MQ sensors series typically have the same mechanism as the MS1100 detecting mechanism. MQ sensor is made from the same materials (SnO2) which receive gas molecules and give them space to react with the oxygen on the surface of the MOS (Metal oxide semiconductor). <br>
+                    3.	DHT22: This sensor measures both humidity and temperature. It measures humidity by capacitive sensor that works on the capacitor. It measures the temperature through resistor with a mechanism called (NTC) Negative Temperature Coefficient). The thermistor works by increasing the temperature. Then, the resistance decreases. The sensor interprets the change in resistance to change in temperature. <br>
+                    <h3>Sensor’s integration:</h3><br>
+                    Some relations were made between the parameters of the project. The relation between temperature & VOC concentration increases substantially when the temperature increases to double. This relationship ensures the integration between these two parameters in detecting illegal factories.
+                </p>
+
+            </h2>
+            <br>
+            
+
+        </section>
+    </main>
+
+
+
+    <script>
+        const apiKey = "AU6532ZNQFC1LXHT"; // Your Read API Key
+        const channelId = "2709384"; // Your Channel ID
+
+        async function fetchThingSpeakData() {
+            try {
+                console.log("Fetching data from ThingSpeak...");
+                const response = await fetch(`https://api.thingspeak.com/channels/${channelId}/feeds.json?api_key=${apiKey}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Data fetched successfully:", data);
+
+                if (data && data.feeds) {
+                    createGraphs(data.feeds);
+                    createDedicatedGraphs(data.feeds);
+                } else {
+                    console.error("No data found in response.");
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        function createGraphs(feeds) {
+            // Labels for all graphs
+            const labels = feeds.map(feed => new Date(feed.created_at).toLocaleString());
+
+            // Data for each field
+            const vocData = feeds.map(feed => parseFloat(feed.field1)); // Assume VOC data is in Field 1
+            const co2Data = feeds.map(feed => parseFloat(feed.field2)); // Assume CO2 data is in Field 2
+            const temperatureData = feeds.map(feed => parseFloat(feed.field3)); // Assume Temperature data is in Field 3
+
+            // Create VOC Overview Graph
+            new Chart(document.getElementById("voc-chart").getContext("2d"), {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "VOC Levels (ppm)",
+                        data: vocData,
+                        borderColor: "#4caf50",
+                        backgroundColor: "rgba(76, 175, 80, 0.2)",
+                        borderWidth: 1,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: "Time" }},
+                        y: { title: { display: true, text: "VOC Concentration (ppm)" }}
+                    }
+                }
+            });
+
+            // Create CO2 Overview Graph
+            new Chart(document.getElementById("co2-chart").getContext("2d"), {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "CO2 Levels (ppm)",
+                        data: co2Data,
+                        borderColor: "#8bc34a",
+                        backgroundColor: "rgba(139, 195, 74, 0.2)",
+                        borderWidth: 1,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: "Time" }},
+                        y: { title: { display: true, text: "CO2 Concentration (ppm)" }}
+                    }
+                }
+            });
+
+            // Create Temperature Overview Graph
+            new Chart(document.getElementById("temperature-chart").getContext("2d"), {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Temperature (°C)",
+                        data: temperatureData,
+                        borderColor: "#388e3c",
+                        backgroundColor: "rgba(56, 142, 60, 0.2)",
+                        borderWidth: 1,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: "Time" }},
+                        y: { title: { display: true, text: "Temperature (°C)" }}
+                    }
+                }
+            });
+        }
+
+        function createDedicatedGraphs(feeds) {
+            // Dedicated Graphs
+            const labels = feeds.map(feed => new Date(feed.created_at).toLocaleString());
+            const vocData = feeds.map(feed => parseFloat(feed.field1));
+            const co2Data = feeds.map(feed => parseFloat(feed.field2));
+            const temperatureData = feeds.map(feed => parseFloat(feed.field3));
+
+            // VOC Dedicated Graph (Line with dots)
+            new Chart(document.getElementById("voc-detailed-chart").getContext("2d"), {
+                type: "line", // Changed from "bar" to "line"
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "VOC Levels (ppm)",
+                        data: vocData,
+                        borderColor: "#4caf50",
+                        backgroundColor: "rgba(76, 175, 80, 0.2)",
+                        borderWidth: 1,
+                        pointRadius: 5, // Show dots on the line
+                        pointBackgroundColor: "#4caf50", // Color for the dots
+                        pointBorderColor: "#ffffff", // Border color for the dots
+                        pointBorderWidth: 2
+                    }]
+                }
+            });
+
+            // CO2 Dedicated Graph (Line with dots)
+            new Chart(document.getElementById("co2-detailed-chart").getContext("2d"), {
+                type: "line", // Changed from "bar" to "line"
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "CO2 Levels (ppm)",
+                        data: co2Data,
+                        borderColor: "#8bc34a",
+                        backgroundColor: "rgba(139, 195, 74, 0.2)",
+                        borderWidth: 1,
+                        pointRadius: 5, // Show dots on the line
+                        pointBackgroundColor: "#8bc34a", // Color for the dots
+                        pointBorderColor: "#ffffff", // Border color for the dots
+                        pointBorderWidth: 2
+                    }]
+                }
+            });
+
+            // Temperature Dedicated Graph (Line with dots)
+            new Chart(document.getElementById("temperature-detailed-chart").getContext("2d"), {
+                type: "line", // Changed from "bar" to "line"
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Temperature (°C)",
+                        data: temperatureData,
+                        borderColor: "#388e3c",
+                        backgroundColor: "rgba(56, 142, 60, 0.2)",
+                        borderWidth: 1,
+                        pointRadius: 5, // Show dots on the line
+                        pointBackgroundColor: "#388e3c", // Color for the dots
+                        pointBorderColor: "#ffffff", // Border color for the dots
+                        pointBorderWidth: 2
+                    }]
+                }
+            });
+        }
+        fetch(`https://api.thingspeak.com/channels/${channelId}/feeds.json?api_key=${apiKey}&results=1`)
+      .then(response => response.json())
+      .then(data => {
+        const feed = data.feeds[0];
+        if (feed) {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('dataBox').style.display = 'flex';
+          document.getElementById('field1').textContent = feed.field1 || 'No Data';
+          document.getElementById('field2').textContent = feed.field2 || 'No Data';
+          document.getElementById('field3').textContent = feed.field3 || 'No Data';
+        } else {
+          document.getElementById('loading').textContent = 'No data available.';
+        }
+      })
+      .catch(error => {
+        document.getElementById('loading').textContent = 'Error fetching data';
+        console.error('Error fetching data:', error);
+      });
+
+
+
+
+
+
+
+        // Fetch data when the page loads
+        window.onload = fetchThingSpeakData;
+    </script>
+</body>
+</html>

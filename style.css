@@ -1,0 +1,183 @@
+*{
+    scroll-behavior: smooth;
+}
+figcaption{
+    
+    color: #2b7a0b; /* Dark green for headings */
+    border-bottom: 2px solid #c5e1c5; /* Light green underline */
+ 
+    text-align: center;
+}
+
+.VOC{
+    text-align:center;
+    margin: 50px;
+    padding: 100px;
+}
+#img{
+    width: 100%;
+  max-width: 500px;
+  display: block;
+  margin: 0 auto;
+
+    
+    
+}
+
+#boxim{
+    height:300px;
+    width:300px;
+    overflow:hidden;
+    border:solid 2px #0fe34f;
+    margin-left:1170px;
+    margin-bottom: 90px;
+    text-align:center;
+    margin-bottom: 7px
+    
+}
+
+#aboveVOC{
+    text-align:left;
+    padding: 10px 0;
+    margin-left: 65px;  
+    width: 75%;
+    height: 90px;
+    display: block;
+
+
+}
+#TyF{ flex: 1;
+    margin: 10px;
+    min-width: 100px;
+    background-color: #ffffff; /* White background for sections */
+    border: 2px solid #0eab3a; /* Light green border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 12px
+}
+#TecR{
+    flex: 1;
+    margin: 10px;
+    min-width: 100px;
+    background-color: #ffffff; /* White background for sections */
+    border: 2px solid #0eab3a; /* Light green border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 12px
+   
+
+    
+}
+#Tec{
+    text-align:center;
+    padding-left: auto; 
+    margin:auto;  
+    width: 75%;
+    height:auto;
+    display: block;
+
+
+}
+#TP{
+    padding-left: 10px; 
+    margin:auto;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e9f5e9; /* Light green background */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+   
+    color: mediumseagreen;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+main {
+    padding: 20px;
+}
+
+.graphs-overview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+section {
+    flex: 1;
+    margin: 10px;
+    min-width: 300px;
+    background-color: #ffffff; /* White background for sections */
+    border: 1px solid #c5e1c5; /* Light green border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    scroll-behavior: smooth;
+}
+
+a{
+    text-decoration: none;
+}
+
+h2 {
+    color: #2b7a0b; /* Dark green for headings */
+    border-bottom: 2px solid #c5e1c5; /* Light green underline */
+    padding-bottom: 5px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+canvas {
+    width: 85%;
+    height: 200px;
+    display: block;
+    margin: auto;
+}
+
+footer {
+    background-color: #2b7a0b; /* Dark green footer */
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.dedicated-section {
+    margin-top: 30px;
+}
+.data-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    margin: auto;
+    font-size: 1.2rem;
+    color:#0eab3a;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: 85%;
+
+  }
+
+  .data-box p {
+    font-size: 1.1rem;
+  }
+
+  .container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding:0px;
+    width: 1500px;
+    text-align: center;
+  }
